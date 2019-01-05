@@ -6,7 +6,7 @@
     <Company>yuzd</Company>
     <Description>safe HttpClient for netcore and netframework</Description>
     <Copyright>zdyu</Copyright>
-    <PackageProjectUrl>https://github.com/yuzd</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/yuzd/HttpClientFactory</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -28,6 +28,10 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Link="README.md" />
   </ItemGroup>
 
 </Project>
