@@ -8,15 +8,17 @@ namespace HttpClientFactory.Impl
     public abstract class HttpClientFactoryBase : IHttpClientFactory
     {
         private readonly ConcurrentDictionary<string, IHttpClient> _clients = new ConcurrentDictionary<string, IHttpClient>();
-        public virtual IHttpClient GetHttpClient(string url)
+        public virtual HttpClient GetHttpClient(string url)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException(nameof(url));
 
-            return _clients.AddOrUpdate(
+            var safeClient = _clients.AddOrUpdate(
                 GetCacheKey(url),
                 Create,
                 (u, client) => client.IsDisposed ? Create(u) : client);
+
+            return safeClient.HttpClient;
         }
 
         public void Dispose()
@@ -35,12 +37,25 @@ namespace HttpClientFactory.Impl
         protected virtual IHttpClient Create(string url) => new SafeHttpClient(this,url);
 
 
-        public virtual HttpClient CreateHttpClient(HttpMessageHandler handler)
+        internal  HttpClient CreateHttpClientInternal(HttpMessageHandler handler)
         {
-            return new HttpClient(handler);
+            return CreateHttpClient(handler);
         }
 
-        public virtual HttpMessageHandler CreateMessageHandler()
+        internal HttpMessageHandler CreateMessageHandlerInternal()
+        {
+            return CreateMessageHandler();
+        }
+
+        protected virtual HttpClient CreateHttpClient(HttpMessageHandler handler)
+        {
+            return new HttpClient(handler)
+            {
+                Timeout = TimeSpan.FromSeconds(200)
+            };
+        }
+
+        protected virtual HttpMessageHandler CreateMessageHandler()
         {
             return new HttpClientHandler
             {

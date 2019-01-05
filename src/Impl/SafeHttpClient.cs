@@ -6,7 +6,6 @@ namespace HttpClientFactory.Impl
     internal class SafeHttpClient : IHttpClient
     {
         private readonly TimeSpan? _connectionLeaseTimeout;
-        private readonly TimeSpan? _timeOut;
 
         private readonly HttpClientFactoryBase _baseFactory;
 
@@ -29,9 +28,8 @@ namespace HttpClientFactory.Impl
             _baseFactory = baseFactory;
             BaseUrl = baseUrl;
             _connectionLeaseTimeout = HttpRunTimeSeetings.Current?.ConnectionLeaseTimeout ?? TimeSpan.FromMinutes(1);
-            _timeOut = HttpRunTimeSeetings.Current?.Timeout ?? TimeSpan.FromSeconds(100);
             _httpClient = new Lazy<HttpClient>(CreateHttpClient);
-            _httpMessageHandler = new Lazy<HttpMessageHandler>(baseFactory.CreateMessageHandler);
+            _httpMessageHandler = new Lazy<HttpMessageHandler>(baseFactory.CreateMessageHandlerInternal);
         }
 
         public bool IsDisposed { get; private set; }
@@ -60,7 +58,7 @@ namespace HttpClientFactory.Impl
                         _zombieClient?.Dispose();
                         _zombieClient = _httpClient.Value;
                         _httpClient = new Lazy<HttpClient>(CreateHttpClient);
-                        _httpMessageHandler = new Lazy<HttpMessageHandler>(_baseFactory.CreateMessageHandler);
+                        _httpMessageHandler = new Lazy<HttpMessageHandler>(_baseFactory.CreateMessageHandlerInternal);
                         _clientCreatedAt = DateTime.UtcNow;
                     }
                 }
@@ -70,7 +68,7 @@ namespace HttpClientFactory.Impl
 
         private HttpClient CreateHttpClient()
         {
-            var cli = _baseFactory.CreateHttpClient(HttpMessageHandler);
+            var cli = _baseFactory.CreateHttpClientInternal(HttpMessageHandler);
             _clientCreatedAt = DateTime.UtcNow;
             return cli;
         }
