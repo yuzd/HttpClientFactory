@@ -18,11 +18,11 @@ and on  high traffic sites you can exhaust the available pool and receive a Syst
 ```
 //useage 1： same Host use same HttpClient
 PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory();// can be static
-HttpClient = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com").HttpClient;
+HttpClient client = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com");
 
 //useage 2： per url use per HttpClient
 PerUrlHttpClientFactory perUrlHttpClientFactory = new PerUrlHttpClientFactory();
-HttpClient = perUrlHttpClientFactory.GetHttpClient("http://www.baidu.com").HttpClient;
+HttpClient client = perUrlHttpClientFactory.GetHttpClient("http://www.baidu.com");
 
 ```
 
