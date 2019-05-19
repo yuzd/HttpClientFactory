@@ -7,6 +7,8 @@ namespace HttpClientFactory
     {
         HttpClient GetHttpClient(string url);
 
+        HttpClient GetProxiedHttpClient(string proxyUrl);
+
     }
 
 }

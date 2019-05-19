@@ -21,6 +21,19 @@ namespace HttpClientFactory.Impl
             return safeClient.HttpClient;
         }
 
+        public virtual HttpClient GetProxiedHttpClient(string proxyUrl)
+        {
+            if (string.IsNullOrEmpty(proxyUrl))
+                throw new ArgumentNullException(nameof(proxyUrl));
+
+            var safeClient = _clients.AddOrUpdate(
+                proxyUrl,
+                CreateProxied,
+                (u, client) => client.IsDisposed ? CreateProxied(u) : client);
+
+            return safeClient.HttpClient;
+        }
+
         public void Dispose()
         {
             foreach (var kv in _clients)
@@ -35,6 +48,7 @@ namespace HttpClientFactory.Impl
         protected abstract string GetCacheKey(string url);
 
         protected virtual IHttpClient Create(string url) => new SafeHttpClient(this,url);
+        protected virtual IHttpClient CreateProxied(string proxyUrl) => new SafeHttpClient(this, proxyUrl, true);
 
 
         internal  HttpClient CreateHttpClientInternal(HttpMessageHandler handler)
@@ -42,24 +56,34 @@ namespace HttpClientFactory.Impl
             return CreateHttpClient(handler);
         }
 
-        internal HttpMessageHandler CreateMessageHandlerInternal()
+        internal HttpMessageHandler CreateMessageHandlerInternal(string proxyUrl = null)
         {
-            return CreateMessageHandler();
+            return CreateMessageHandler(proxyUrl);
         }
 
         protected virtual HttpClient CreateHttpClient(HttpMessageHandler handler)
         {
             return new HttpClient(handler)
             {
-                Timeout = TimeSpan.FromSeconds(200)
+                Timeout = TimeSpan.FromSeconds(20)
             };
         }
 
-        protected virtual HttpMessageHandler CreateMessageHandler()
+        protected virtual HttpMessageHandler CreateMessageHandler(string proxyUrl = null)
         {
+            if (!string.IsNullOrEmpty(proxyUrl))
+            {
+                return new HttpClientHandler
+                {
+                    UseProxy = true,
+                    Proxy = new WebProxy(proxyUrl),
+                    AutomaticDecompression = DecompressionMethods.None
+                };
+            }
             return new HttpClientHandler
             {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                UseProxy = false,
+                AutomaticDecompression = DecompressionMethods.None
             };
         }
     }

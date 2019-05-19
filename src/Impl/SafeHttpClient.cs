@@ -22,14 +22,16 @@ namespace HttpClientFactory.Impl
 
         public HttpMessageHandler HttpMessageHandler => HttpRunTimeSeetings.Current?.HttpMessageHandler ?? _httpMessageHandler?.Value;
         public string BaseUrl { get; set; }
+        public bool IsProxy { get; set; }
 
-        public SafeHttpClient(HttpClientFactoryBase baseFactory,string baseUrl = null)
+        public SafeHttpClient(HttpClientFactoryBase baseFactory,string baseUrl = null,bool isProxy = false)
         {
             _baseFactory = baseFactory;
             BaseUrl = baseUrl;
+            IsProxy = isProxy;
             _connectionLeaseTimeout = HttpRunTimeSeetings.Current?.ConnectionLeaseTimeout ?? TimeSpan.FromMinutes(1);
             _httpClient = new Lazy<HttpClient>(CreateHttpClient);
-            _httpMessageHandler = new Lazy<HttpMessageHandler>(baseFactory.CreateMessageHandlerInternal);
+            _httpMessageHandler = new Lazy<HttpMessageHandler>(()=>baseFactory.CreateMessageHandlerInternal(isProxy?baseUrl:null));
         }
 
         public bool IsDisposed { get; private set; }
@@ -58,7 +60,7 @@ namespace HttpClientFactory.Impl
                         _zombieClient?.Dispose();
                         _zombieClient = _httpClient.Value;
                         _httpClient = new Lazy<HttpClient>(CreateHttpClient);
-                        _httpMessageHandler = new Lazy<HttpMessageHandler>(_baseFactory.CreateMessageHandlerInternal);
+                        _httpMessageHandler = new Lazy<HttpMessageHandler>(()=>_baseFactory.CreateMessageHandlerInternal(IsProxy ? BaseUrl : null));
                         _clientCreatedAt = DateTime.UtcNow;
                     }
                 }
