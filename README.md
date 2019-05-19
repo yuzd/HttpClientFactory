@@ -24,6 +24,9 @@ HttpClient client = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com
 PerUrlHttpClientFactory perUrlHttpClientFactory = new PerUrlHttpClientFactory();
 HttpClient client = perUrlHttpClientFactory.GetHttpClient("http://www.baidu.com");
 
+//useage 3： per proxy use per HttpClient
+PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory();
+HttpClient client = perUrlHttpClientFactory.GetProxiedHttpClient("http://127.0.0.1:8080");
 ```
 
 ## Easy to implement
