@@ -57,5 +57,5 @@ HttpClient client = perUrlHttpClientFactory.GetProxiedHttpClient("http://127.0.0
 ```
 
 ## Remark
-1. Default Timeout in HttpClient is TimeSpan.FromSeconds(200)
+1. Default Timeout is TimeSpan.FromSeconds(20)
 2. Default [ConnectionLeaseExpired](http://byterot.blogspot.com/2016/07/singleton-httpclient-dns.html) is TimeSpan.FromMinutes(1)

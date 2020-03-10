@@ -7,8 +7,8 @@
     <Description>safe HttpClient for netcore and netframework</Description>
     <Copyright>zdyu</Copyright>
     <PackageProjectUrl>https://github.com/yuzd/HttpClientFactory</PackageProjectUrl>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>add GetProxiedHttpClient</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Allow setting default HttpClient timeout per factory</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
