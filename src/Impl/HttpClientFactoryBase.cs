@@ -8,7 +8,7 @@ namespace HttpClientFactory.Impl
     public abstract class HttpClientFactoryBase : IHttpClientFactory
     {
         private readonly ConcurrentDictionary<string, IHttpClient> _clients = new ConcurrentDictionary<string, IHttpClient>();
-        private readonly TimeSpan _defaultClientTimeout = TimeSpan.FromSeconds(20);
+        private readonly TimeSpan _defaultClientTimeout = TimeSpan.FromSeconds(200);
 
         protected HttpClientFactoryBase()
         {
