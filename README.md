@@ -19,6 +19,8 @@ and on  high traffic sites you can exhaust the available pool and receive a Syst
 //useage 1： same Host use same HttpClient
 PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory();// can be static
 HttpClient client = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com");
+//or you can set timeout for perFactory
+HttpClient client = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com",TimeSpan.FromSeconds(10));
 
 //useage 2： per url use per HttpClient
 PerUrlHttpClientFactory perUrlHttpClientFactory = new PerUrlHttpClientFactory();
@@ -57,5 +59,5 @@ HttpClient client = perUrlHttpClientFactory.GetProxiedHttpClient("http://127.0.0
 ```
 
 ## Remark
-1. Default Timeout is TimeSpan.FromSeconds(20)
+1. Default Timeout is TimeSpan.FromSeconds(100)
 2. Default [ConnectionLeaseExpired](http://byterot.blogspot.com/2016/07/singleton-httpclient-dns.html) is TimeSpan.FromMinutes(1)
