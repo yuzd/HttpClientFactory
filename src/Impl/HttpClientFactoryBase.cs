@@ -8,6 +8,16 @@ namespace HttpClientFactory.Impl
     public abstract class HttpClientFactoryBase : IHttpClientFactory
     {
         private readonly ConcurrentDictionary<string, IHttpClient> _clients = new ConcurrentDictionary<string, IHttpClient>();
+        private readonly TimeSpan _defaultClientTimeout = TimeSpan.FromSeconds(20);
+
+        protected HttpClientFactoryBase()
+        {
+        }
+        protected HttpClientFactoryBase(TimeSpan defaultClientTimeout)
+        {
+            _defaultClientTimeout = defaultClientTimeout;
+        }
+
         public virtual HttpClient GetHttpClient(string url)
         {
             if (string.IsNullOrEmpty(url))
@@ -65,7 +75,7 @@ namespace HttpClientFactory.Impl
         {
             return new HttpClient(handler)
             {
-                Timeout = TimeSpan.FromSeconds(20)
+                Timeout = _defaultClientTimeout
             };
         }
 

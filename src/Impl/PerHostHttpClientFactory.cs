@@ -7,6 +7,14 @@ namespace HttpClientFactory.Impl
     /// </summary>
     public class PerHostHttpClientFactory : HttpClientFactoryBase
     {
+        public PerHostHttpClientFactory()
+        {
+        }
+
+        public PerHostHttpClientFactory(TimeSpan defaultClientTimeout) : base(defaultClientTimeout)
+        {
+        }
+
         protected override string GetCacheKey(string url)
         {
             return new Uri(url).Host;
