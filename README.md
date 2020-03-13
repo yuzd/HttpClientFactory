@@ -18,16 +18,20 @@ and on  high traffic sites you can exhaust the available pool and receive a Syst
 ```
 //useage 1： same Host use same HttpClient
 PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory();// can be static
+//or you can change default timeout for perFactory
+PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory(TimeSpan.FromSeconds(10));
 HttpClient client = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com");
-//or you can set timeout for perFactory
-HttpClient client = perHostHttpClientFactory.GetHttpClient("http://www.baidu.com",TimeSpan.FromSeconds(10));
 
 //useage 2： per url use per HttpClient
 PerUrlHttpClientFactory perUrlHttpClientFactory = new PerUrlHttpClientFactory();
+//or you can change default timeout for perFactory
+PerUrlHttpClientFactory perUrlHttpClientFactory = new PerUrlHttpClientFactory(TimeSpan.FromSeconds(10));
 HttpClient client = perUrlHttpClientFactory.GetHttpClient("http://www.baidu.com");
 
 //useage 3： per proxy use per HttpClient
 PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory();
+//or you can change default timeout for perFactory
+PerHostHttpClientFactory perHostHttpClientFactory = new PerHostHttpClientFactory(TimeSpan.FromSeconds(10));
 HttpClient client = perUrlHttpClientFactory.GetProxiedHttpClient("http://127.0.0.1:8080");
 ```
 

@@ -12,7 +12,7 @@ namespace UnitTest
             
             var factory = new PerHostHttpClientFactory();
             var client = factory.GetHttpClient("http://www.baidu.com");
-            Assert.Equal(client.Timeout, TimeSpan.FromSeconds(20));
+            Assert.Equal(client.Timeout, TimeSpan.FromSeconds(100));
         }
 
         [Fact]
